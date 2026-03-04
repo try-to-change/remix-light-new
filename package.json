@@ -1,0 +1,144 @@
+{
+  "name": "remix-light",
+  "displayName": "remix-light",
+  "version": "0.1.3",
+  "description": "A light version of the Remix Ethereum IDE as a VSCode extension",
+  "author": "maxdavid",
+  "publisher": "maxdavidwow",
+  "license": "MIT",
+  "icon": "logo.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/maxdavidwow/remix-light"
+  },
+  "keywords": [
+    "solidity",
+    "ethereum",
+    "blockchain",
+    "compiler",
+    "remix"
+  ],
+  "main": "./dist/extension.js",
+  "engines": {
+    "vscode": "^1.34.0"
+  },
+  "categories": [
+    "Debuggers",
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "contributes": {
+    "configuration": {
+      "title": "Remix Light",
+      "properties": {
+        "remix-light.useCompiler": {
+          "order": 1,
+          "type": "boolean",
+          "default": true,
+          "description": "Defines if the compiler should be active."
+        },
+        "remix-light.autoCompile": {
+          "order": 2,
+          "type": "boolean",
+          "default": false,
+          "description": "Defines if contracts should be automaitcally compiled when saved."
+        },
+        "remix-light.contractGlobPattern": {
+          "order": 4,
+          "type": "string",
+          "default": "**/*.sol",
+          "description": "Pattern used to search for solidity contract files used by the compiler."
+        },
+        "remix-light.artifactGlobPattern": {
+          "order": 5,
+          "type": "string",
+          "default": null,
+          "description": "Pattern used to search for contract artifact files wich will be added to the deployable contracts.\nNote that files defined by this glob pattern should be valid .json files as they will be interpreted as such!"
+        },
+        "remix-light.solcVersion": {
+          "order": 3,
+          "type": "string",
+          "default": "",
+          "description": "Preferred solc version to load on startup (e.g. \"0.8.25+commit.b61c2a91\"). Leave empty to use the bundled version. Available versions are fetched from binaries.soliditylang.org."
+        }
+      }
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "remix-light",
+          "title": "remix-light",
+          "icon": "./logo.svg"
+        }
+      ]
+    },
+    "views": {
+      "remix-light": [
+        {
+          "type": "webview",
+          "id": "remix-light-view",
+          "name": "Panel"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "remix-light.reload",
+          "when": "remix-light.debug == true",
+          "group": "navigation"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "remix-light.reload",
+        "title": "Reload",
+        "icon": "$(refresh)"
+      }
+    ]
+  },
+  "scripts": {
+    "extension-bundle": "esbuild ./src/extension.ts --bundle --outdir=./dist --external:vscode --external:electron --external:solc --external:ganache --platform=node --format=cjs --tsconfig=./tsconfig.extension.json",
+    "extension-dev": "npm run extension-bundle -- --sourcemap=inline --watch --define:DEBUG=true",
+    "react-bundle": "esbuild ./src/remix-view/index.tsx --bundle --outdir=./dist/remix-view --tsconfig=./tsconfig.remixview.json",
+    "react-dev": "npm run react-bundle -- --sourcemap=inline --watch --define:DEBUG=true",
+    "css": "tailwindcss -i ./src/remix-view/index.css -o ./dist/remix-view/index.css",
+    "css-dev": "npm run css -- --watch",
+    "copy-assets": "node copyAssets.js",
+    "dev": "concurrently 'npm:extension-dev' 'npm:css-dev' 'npm:react-dev' 'npm:copy-assets'",
+    "start": "npm run dev",
+    "build": "npm run extension-bundle -- --minify --define:DEBUG=false && npm run react-bundle --minify --define:DEBUG=false && npm run css && npm run copy-assets",
+    "package": "vsce package --githubBranch=main"
+  },
+  "dependencies": {
+    "@remix-project/remix-simulator": "^0.2.10",
+    "@vscode/codicons": "0.0.28",
+    "ethereumjs-util": "^7.1.4",
+    "ganache": "^7.9.2",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "rxjs": "^7.5.4",
+    "solc": "^0.8.25",
+    "web3": "^1.7.0"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.21",
+    "@types/react": "^17.0.39",
+    "@types/react-dom": "^17.0.12",
+    "@types/vscode": "^1.34.0",
+    "@types/web3": "^1.2.2",
+    "@typescript-eslint/eslint-plugin": "^5.12.1",
+    "@typescript-eslint/parser": "^5.12.1",
+    "concurrently": "^7.0.0",
+    "esbuild": "^0.14.23",
+    "eslint": "^8.9.0",
+    "postcss": "^8.4.7",
+    "tailwindcss": "^3.0.23",
+    "tslib": "^2.3.1",
+    "typescript": "^4.5.5",
+    "vsce": "^2.6.7"
+  }
+}

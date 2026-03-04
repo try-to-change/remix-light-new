@@ -1,0 +1,4 @@
+{
+	"remix-light.artifactGlobPattern": "artifacts/**/*.json",
+	"remix-light.autoCompile": true
+}
