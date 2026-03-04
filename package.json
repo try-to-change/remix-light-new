@@ -1,10 +1,10 @@
 {
   "name": "remix-light",
   "displayName": "remix-light",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "A light version of the Remix Ethereum IDE as a VSCode extension",
-  "author": "maxdavid",
-  "publisher": "maxdavidwow",
+  "author": "Ttoc",
+  "publisher": "remix-light-new",
   "license": "MIT",
   "icon": "logo.png",
   "repository": {
